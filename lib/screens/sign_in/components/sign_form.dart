@@ -27,7 +27,7 @@ class _SignFormState extends State<SignForm> {
   String? password;
   bool? remember = false;
   final List<String?> errors = [];
-  final LoginController loginController = Get.put(LoginController());
+  final LoginController loginController = Get.find();
 
   void addError({String? error}) {
     if (!errors.contains(error)) {

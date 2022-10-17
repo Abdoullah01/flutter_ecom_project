@@ -33,9 +33,10 @@ class CartController extends GetxController {
     }
 
     totalQty.value = totalQty.value + numOfItems.value;
-    numOfItems.value = 1;
+
     totalAmount.value =
         totalAmount.value + (product.listPrice * numOfItems.value);
+    numOfItems.value = 1;
 
     Get.snackbar("Produit Ajouté", "Vous avez ${product.name} au panier",
         snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 3));

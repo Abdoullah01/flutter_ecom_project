@@ -14,6 +14,7 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
   CartController cartcontroller = Get.put(CartController());
   LoginController loginController = Get.put(LoginController());
+  //final LoginController loginController = Get.put(LoginController());
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
