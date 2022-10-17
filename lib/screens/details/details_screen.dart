@@ -15,7 +15,7 @@ class DetailsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
 
     // Initialiser la quantity de l'article à 1
-   // cartcontroller.initializeQuantity();
+    cartcontroller.initializeQuantity();
     final ProductDetailsArguments agrs =
         ModalRoute.of(context)!.settings.arguments as ProductDetailsArguments;
     return Scaffold(
