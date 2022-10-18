@@ -25,7 +25,6 @@ class _ProductImagesState extends State<ProductImages>
   String? visualProduct;
   List<String> variantProduct = [];
 
-  
   late TransformationController controller;
   TapDownDetails? tapDownDetails;
   late AnimationController animationController;
@@ -34,12 +33,14 @@ class _ProductImagesState extends State<ProductImages>
   @override
   void initState() {
     super.initState();
+    var test = [widget.product.image1920];
+    print("variantProduct 1 ${variantProduct.length}");
 
     variantProduct = [
-      widget.product.image1920,
+      ...test,
       ...widget.product.productVariantIds.imageVariant1920
     ];
-   
+    print("variantProduct 2 ${variantProduct.length}");
 
     // variantProduct.insert(0, widget.product.image1920);
     // print("init 3 ${variantProduct.length}");
@@ -56,7 +57,7 @@ class _ProductImagesState extends State<ProductImages>
   @override
   void dispose() {
     // TODO: implement dispose
-    
+
     controller.dispose();
     animationController.dispose();
     super.dispose();
@@ -111,8 +112,7 @@ class _ProductImagesState extends State<ProductImages>
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            ...List.generate(
-                widget.product.productVariantIds.imageVariant1920.length,
+            ...List.generate(variantProduct.length,
                 (index) => buildSmallProductPreview(index)),
           ],
         )

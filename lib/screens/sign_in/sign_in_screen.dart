@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../helper/shared_preference.dart';
+import '../../routes.dart';
 import 'components/body.dart';
 
 class SignInScreen extends StatelessWidget {
   static String routeName = "/sign_in";
+
+
+    checkSessionId() async {
+    var s = SharedPreference().getSessionIdToLogin();
+    if (s != null) {
+      Get.offAllNamed(GetRoutes.home);
+    }
+  }
 
   const SignInScreen({super.key});
   @override

@@ -19,12 +19,7 @@ class LoginController extends GetxController {
     passwordController = TextEditingController();
   }
 
-  checkSessionId() async {
-    var s = SharedPreference().getSessionIdToLogin();
-    if (s != null) {
-      Get.offAllNamed(GetRoutes.home);
-    }
-  }
+
 
   @override
   void onClose() {

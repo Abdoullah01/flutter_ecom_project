@@ -25,8 +25,8 @@ class SearchField extends StatelessWidget {
             border: InputBorder.none,
             focusedBorder: InputBorder.none,
             enabledBorder: InputBorder.none,
-            hintText: "Search product",
-            prefixIcon: Icon(Icons.search)),
+            hintText: "Recherche",
+            prefixIcon: const Icon(Icons.search)),
       ),
     );
   }

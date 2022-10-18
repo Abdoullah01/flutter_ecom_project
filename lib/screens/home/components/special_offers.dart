@@ -16,7 +16,7 @@ class SpecialOffers extends StatelessWidget {
           padding:
               EdgeInsets.symmetric(horizontal: getProportionateScreenWidth(20)),
           child: SectionTitle(
-            title: "Special for you",
+            title: "Speciale pour vous",
             press: () {},
           ),
         ),
@@ -26,14 +26,14 @@ class SpecialOffers extends StatelessWidget {
           child: Row(
             children: [
               SpecialOfferCard(
-                image: "assets/images/Image Banner 2.png",
-                category: "Smartphone",
+                image: "assets/images/woman.png",
+                category: "Femme",
                 numOfBrands: 18,
                 press: () {},
               ),
               SpecialOfferCard(
-                image: "assets/images/Image Banner 3.png",
-                category: "Fashion",
+                image: "assets/images/man.png",
+                category: "Homme",
                 numOfBrands: 24,
                 press: () {},
               ),
@@ -74,7 +74,7 @@ class SpecialOfferCard extends StatelessWidget {
               children: [
                 Image.asset(
                   image,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -95,7 +95,7 @@ class SpecialOfferCard extends StatelessWidget {
                   ),
                   child: Text.rich(
                     TextSpan(
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                       children: [
                         TextSpan(
                           text: "$category\n",
