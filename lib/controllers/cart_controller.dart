@@ -32,14 +32,20 @@ class CartController extends GetxController {
       cartItems.add(CartItemListModel(product: product, qty: numOfItems.value));
     }
 
-    totalQty.value = totalQty.value + numOfItems.value;
+    //totalQty.value = totalQty.value + numOfItems.value;
 
-    totalAmount.value =
-        totalAmount.value + (product.listPrice * numOfItems.value);
+    totalAmount.value = totalAmount.value +
+        (product.listPrice * numOfItems.value).toPrecision(2);
     numOfItems.value = 1;
 
     Get.snackbar("Produit Ajouté", "Vous avez ${product.name} au panier",
         snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 3));
+  }
+
+  void removeItemFromCart(CartItemListModel currentItem) {
+    cartItems.remove(currentItem);
+    totalAmount.value = totalAmount.value -
+        (currentItem.product.listPrice * currentItem.qty).toPrecision(2);
   }
 
   void initializeQuantity() {

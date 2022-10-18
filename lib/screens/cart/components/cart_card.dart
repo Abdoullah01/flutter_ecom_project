@@ -32,29 +32,43 @@ class CartCard extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 20),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              cartItemListModel.product.name,
-              style: const TextStyle(color: Colors.black, fontSize: 16),
-              maxLines: 2,
-            ),
-            const SizedBox(height: 10),
-            Text.rich(
-              TextSpan(
-                text: "${cartItemListModel.product.listPrice} FCFA",
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, color: kPrimaryColor),
-                children: [
-                  TextSpan(
-                      text: "  x${cartItemListModel.qty.toString()}",
-                      style: Theme.of(context).textTheme.bodyText1),
-                ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                cartItemListModel.product.name,
+                style: const TextStyle(color: Colors.black, fontSize: 16),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
-            )
-          ],
-        )
+              const SizedBox(height: 10),
+              Text.rich(
+                TextSpan(
+                  text: "${cartItemListModel.product.listPrice} FCFA",
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, color: kPrimaryColor),
+                  children: [
+                    TextSpan(
+                        text: "  x${cartItemListModel.qty.toString()}",
+                        style: Theme.of(context).textTheme.bodyText1),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          width: 25,
+        ),
+        IconButton(
+            onPressed: () {
+              cartcontroller.removeItemFromCart(cartItemListModel);
+            },
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.red,
+            ))
       ],
     );
   }

@@ -32,8 +32,17 @@ class _ProductImagesState extends State<ProductImages>
   @override
   void initState() {
     super.initState();
-    variantProduct.insert(0, widget.product.image1920);
-    variantProduct = widget.product.productVariantIds.imageVariant1920;
+    print("init 1 ${variantProduct.length}");
+    print("init 0 ${widget.product.image1920}");
+    variantProduct = [
+      widget.product.image1920,
+      ...widget.product.productVariantIds.imageVariant1920
+    ];
+    print("init 2 ${variantProduct.length}");
+
+    // variantProduct.insert(0, widget.product.image1920);
+    // print("init 3 ${variantProduct.length}");
+
     controller = TransformationController();
     animationController = AnimationController(
       vsync: this,
@@ -46,6 +55,7 @@ class _ProductImagesState extends State<ProductImages>
   @override
   void dispose() {
     // TODO: implement dispose
+    print("Dispose");
     controller.dispose();
     animationController.dispose();
     super.dispose();
@@ -62,7 +72,7 @@ class _ProductImagesState extends State<ProductImages>
             onDoubleTap: () {
               final position = tapDownDetails!.localPosition;
 
-              final double scale = 3;
+              const double scale = 3;
               final x = -position.dx * (scale - 1);
               final y = -position.dy * (scale - 1);
               final zoomed = Matrix4.identity()
@@ -113,11 +123,8 @@ class _ProductImagesState extends State<ProductImages>
     return GestureDetector(
       onTap: () {
         setState(() {
-          visualProduct = widget
-              .product.productVariantIds.imageVariant1920[index]
-              .split(',')
-              .last;
           selectedImage = index;
+          visualProduct = variantProduct[index].split(',').last;
         });
       },
       child: AnimatedContainer(

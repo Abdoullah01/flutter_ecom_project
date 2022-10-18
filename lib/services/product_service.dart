@@ -10,7 +10,7 @@ class ProductService {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     sessionId = prefs.getString('session_id')!;
 
-    var uri = Uri.parse("http://192.168.1.18:8069/api/get_all_product");
+    var uri = Uri.parse("http://188.166.104.18:9011/api/get_all_product");
     var response = await client.get(
       uri,
       headers: <String, String>{
