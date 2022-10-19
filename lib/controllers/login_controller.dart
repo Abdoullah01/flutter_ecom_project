@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:ecom_project/constants.dart';
+import 'package:ecom_project/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/widgets.dart';
@@ -14,12 +15,17 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    //checkSessionId();
+   // checkSessionId();
     emailController = TextEditingController();
     passwordController = TextEditingController();
   }
 
-
+  /* checkSessionId() async {
+    var s = SharedPreference().getSessionIdToLogin();
+    if (s != null) {
+    Get.offAll(const HomeScreen());
+    }
+  } */
 
   @override
   void onClose() {

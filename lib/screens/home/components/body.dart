@@ -1,3 +1,4 @@
+import 'package:ecom_project/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
@@ -18,28 +19,33 @@ class Body extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Obx(() {
-        if (productController.isLoading.value)
-          // ignore: curly_braces_in_flow_control_structures
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-        else {
-          return SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(height: getProportionateScreenHeight(20)),
-                const HomeHeader(),
-                SizedBox(height: getProportionateScreenWidth(10)),
-                const DiscountBanner(),
-                Categories(),
-                const SpecialOffers(),
-                SizedBox(height: getProportionateScreenWidth(30)),
-                PopularProducts(),
-                SizedBox(height: getProportionateScreenWidth(30)),
-              ],
-            ),
-          );
-        }
+        return !productController.isLoading.value
+            ? RefreshIndicator(
+                onRefresh: () {
+                  productController.refreshData();
+                  return Future<void>.delayed(const Duration(seconds: 3));
+                },
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(height: getProportionateScreenHeight(20)),
+                      const HomeHeader(),
+                      SizedBox(height: getProportionateScreenWidth(10)),
+                      const DiscountBanner(),
+                      Categories(),
+                      const SpecialOffers(),
+                      SizedBox(height: getProportionateScreenWidth(30)),
+                      PopularProducts(),
+                      SizedBox(height: getProportionateScreenWidth(30)),
+                    ],
+                  ),
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(
+                  color: kPrimaryColor,
+                ),
+              );
       }),
     );
   }
