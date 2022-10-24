@@ -1,9 +1,7 @@
 import 'dart:convert';
 import 'package:ecom_project/constants.dart';
-import 'package:ecom_project/screens/home/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../helper/shared_preference.dart';
@@ -35,7 +33,7 @@ class LoginController extends GetxController {
     passwordController.dispose();
   }
 
-  final String BASE_URL = "http://188.166.104.18:9011/";
+  final String BASE_URL = "http://192.168.1.18:8069/";
   Future<void> login() async {
     final Map<String, dynamic> dataParams = <String, dynamic>{
       "db": "mobile_app",
@@ -60,6 +58,7 @@ class LoginController extends GetxController {
             middleText: "Vérifiez votre login et mot de passe",
             barrierDismissible: false,
             confirm: confirmBtn());
+            Get.back();
       } else {
         String rawCookie = response.headers['set-cookie']!;
         int index = rawCookie.indexOf(';');
@@ -68,7 +67,7 @@ class LoginController extends GetxController {
         int idx = refreshToken.indexOf("=");
         String sessionId = refreshToken.substring(idx + 1).trim();
         await SharedPreference().setSessionIdToLogin(sessionId);
-        Get.toNamed(GetRoutes.loginSuccessScreen);
+        Get.offAllNamed(GetRoutes.home);
       }
       //var err = jsonResponse['error'];
       //print("erreur   : $err");

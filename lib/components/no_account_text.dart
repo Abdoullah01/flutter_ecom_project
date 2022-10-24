@@ -1,6 +1,6 @@
+import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
-
-
+import 'package:get/get.dart';
 import '../constants.dart';
 import '../screens/sign_up/sign_up_screen.dart';
 import '../size_config.dart';
@@ -20,7 +20,7 @@ class NoAccountText extends StatelessWidget {
           style: TextStyle(fontSize: getProportionateScreenWidth(16)),
         ),
         GestureDetector(
-          onTap: () => Navigator.pushNamed(context, SignUpScreen.routeName),
+          onTap: () => Get.toNamed(GetRoutes.signUpScreen),
           child: Text(
             "Sign Up",
             style: TextStyle(

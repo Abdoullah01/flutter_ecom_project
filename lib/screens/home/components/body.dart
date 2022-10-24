@@ -1,7 +1,6 @@
 import 'package:ecom_project/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 
 import '../../../controllers/product_controller.dart';
 import '../../../size_config.dart';

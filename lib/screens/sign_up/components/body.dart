@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
-
 import '../../../components/socal_card.dart';
 import '../../../constants.dart';
 import '../../../size_config.dart';
 import 'sign_up_form.dart';
 
 class Body extends StatelessWidget {
+  const Body({super.key});
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -24,9 +25,9 @@ class Body extends StatelessWidget {
                   "Complete your details or continue \nwith social media",
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: SizeConfig.screenHeight * 0.08),
-                SignUpForm(),
-                SizedBox(height: SizeConfig.screenHeight * 0.08),
+                SizedBox(height: SizeConfig.screenHeight * 0.04),
+                const SignUpForm(),
+                SizedBox(height: SizeConfig.screenHeight * 0.04),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [

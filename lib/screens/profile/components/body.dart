@@ -1,5 +1,8 @@
+import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
+import '../../../helper/shared_preference.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
@@ -33,9 +36,12 @@ class Body extends StatelessWidget {
             press: () {},
           ),
           ProfileMenu(
-            text: "Log Out",
+            text: "Déconnexion",
             icon: "assets/icons/Log out.svg",
-            press: () {},
+            press: () async {
+              await SharedPreference().removeSessionIdToLogin();
+              Get.toNamed(GetRoutes.signIn);
+            },
           ),
         ],
       ),

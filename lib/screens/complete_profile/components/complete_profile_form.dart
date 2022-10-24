@@ -24,17 +24,19 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
   String? address;
 
   void addError({String? error}) {
-    if (!errors.contains(error))
+    if (!errors.contains(error)) {
       setState(() {
         errors.add(error);
       });
+    }
   }
 
   void removeError({String? error}) {
-    if (errors.contains(error))
+    if (errors.contains(error)) {
       setState(() {
         errors.remove(error);
       });
+    }
   }
 
   @override
@@ -101,7 +103,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         if (value.isNotEmpty) {
           removeError(error: kPhoneNumberNullError);
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {
@@ -142,7 +144,7 @@ class _CompleteProfileFormState extends State<CompleteProfileForm> {
         if (value.isNotEmpty) {
           removeError(error: kNamelNullError);
         }
-        return null;
+        return;
       },
       validator: (value) {
         if (value!.isEmpty) {

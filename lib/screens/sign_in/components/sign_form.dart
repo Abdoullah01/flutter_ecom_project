@@ -2,7 +2,6 @@ import 'package:ecom_project/controllers/login_controller.dart';
 import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:http/http.dart';
 
 import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';

@@ -1,5 +1,11 @@
-import 'package:get/get.dart';
+import 'dart:convert';
 
+import 'package:ecom_project/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:http/http.dart' as http;
+import '../constants.dart';
 import '../models/Cart.dart';
 import '../models/Product.dart';
 
@@ -11,6 +17,7 @@ class CartController extends GetxController {
   var totalAmount = 0.0.obs;
 
   var cartItems = <CartItemListModel>[].obs;
+  var orderIsOk = true.obs;
 
   void removeItem() {
     if (numOfItems.value > 1) {
@@ -51,43 +58,66 @@ class CartController extends GetxController {
   void initializeQuantity() {
     numOfItems.value = 1;
   }
+
+  create_order() async {
+    var sessionId = "";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    sessionId = prefs.getString('session_id')!;
+    for (var element in cartItems) {
+      Map<String, dynamic> dataParams = <String, dynamic>{
+        "params": {
+          "order_data":[{
+            "product_id": element.product.id,
+            "quantity": element.qty,
+          }]
+        },
+      };
+
+      var data = jsonEncode(dataParams);
+      print("data  :$data");
+      var headers = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "X-Openerp-Session-Id": sessionId,
+      };
+
+      var uri = Uri.parse("http://192.168.1.18:8069/api/create_ordered");
+      var response = await http.post(uri, headers: headers, body: data);
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        if (jsonResponse['status'] == 200) {
+          Get.defaultDialog(
+              title: "Commande validée",
+              middleText: "Vous avez passez votre",
+              barrierDismissible: false,
+              confirm: confirmBtn());
+        }
+      } else {
+        Get.defaultDialog(
+            title: "Commande validée",
+            middleText: "Vous avez passez votre",
+            barrierDismissible: false,
+            confirm: noConfirmBtn());
+      }
+    }
+  }
 }
 
+// ignore: non_constant_identifier_names
 
+Widget confirmBtn() {
+  return ElevatedButton(
+      onPressed: () {
+        Get.toNamed(GetRoutes.home);
+      },
+      style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
+      child: const Text("OK"));
+}
 
-
-  /* var _products = {}.obs;
-
-  void addProduct(Product product) {
-    if (_products.containsKey(product)) {
-      _products[product] += 1;
-    } else {
-      _products[product] = 1;
-    }
-
-    Get.snackbar("Product Added", "You added the ${product.name} to the cart",
-        snackPosition: SnackPosition.BOTTOM,
-        duration: const Duration(seconds: 1));
-  }
-
-  void removeProduct(Product product) {
-    if (_products.containsKey(product) && _products[product] == 1) {
-      _products.removeWhere((key, value) => key == product);
-    } else {
-      _products[product] -= 1;
-    }
-  }
-
-  get productSubtotal => _products.entries
-      .map((product) => product.key.listPrice * product.value)
-      .toList();
-
-  get total => _products.entries.isEmpty
-      ? 0
-      : _products.entries
-          .map((product) => product.key.listPrice * product.value)
-          .toList()
-          .reduce((value, element) => value + element)
-          .toStringAsFixed(2);
-  get products => _products;
-} */
+Widget noConfirmBtn() {
+  return ElevatedButton(
+      onPressed: () {
+        Get.back();
+      },
+      style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
+      child: const Text("OK"));
+}

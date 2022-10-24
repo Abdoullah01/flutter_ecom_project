@@ -5,12 +5,12 @@ import 'package:get/get.dart';
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../controllers/cart_controller.dart';
+import '../../../models/Cart.dart';
+import '../../../services/product_service.dart';
 import '../../../size_config.dart';
 
 class CheckoutCard extends StatelessWidget {
-  CheckoutCard({
-    Key? key,
-  }) : super(key: key);
+  CheckoutCard({Key? key}) : super(key: key);
 
   final CartController cartController = Get.find();
   @override
@@ -84,8 +84,10 @@ class CheckoutCard extends StatelessWidget {
                 SizedBox(
                   width: getProportionateScreenWidth(190),
                   child: DefaultButton(
-                    text: "Check Out",
-                    press: () {},
+                    text: "Commander",
+                    press: () async {
+                      await cartController.create_order();
+                    },
                   ),
                 ),
               ],
