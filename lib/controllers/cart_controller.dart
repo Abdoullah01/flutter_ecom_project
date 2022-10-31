@@ -62,41 +62,45 @@ class CartController extends GetxController {
   create_order() async {
     var sessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    sessionId = prefs.getString('session_id')!;
-    for (var element in cartItems) {
-      Map<String, dynamic> dataParams = <String, dynamic>{
-        "params": {
-          "order_data":[{
-            "product_id": element.product.id,
-            "quantity": element.qty,
-          }]
-        },
-      };
+    sessionId = prefs.getString('token')!;
+    Map<String, dynamic> dataParams = <String, dynamic>{
+      "params": {
+        "order_data": [
+          for (var element in cartItems)
+            {
+              "product_id": element.product.id,
+              "description_sale": element.product.descriptionSale,
+              "quantity": element.qty,
+            }
+        ]
+      },
+    };
 
-      var data = jsonEncode(dataParams);
-      print("data  :$data");
-      var headers = <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-        "X-Openerp-Session-Id": sessionId,
-      };
+    var data = jsonEncode(dataParams);
+    print("data  :$data");
+    var headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+      "X-Openerp-Session-Id": sessionId,
+    };
 
-      var uri = Uri.parse("http://192.168.1.18:8069/api/create_ordered");
-      var response = await http.post(uri, headers: headers, body: data);
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        if (jsonResponse['status'] == 200) {
-          Get.defaultDialog(
-              title: "Commande validée",
-              middleText: "Vous avez passez votre",
-              barrierDismissible: false,
-              confirm: confirmBtn());
-        }
-      } else {
-        Get.defaultDialog(
+    var uri = Uri.parse("http://192.168.1.4:8069/api/create_ordered");
+    var response = await http.post(uri, headers: headers, body: data);
+    if (response.statusCode == 200) {
+      var jsonResponse = jsonDecode(response.body);
+      print("data jsonResponse :$jsonResponse");
+      if (jsonResponse.toString().contains("error")) {
+        /* Get.defaultDialog(
             title: "Commande validée",
             middleText: "Vous avez passez votre",
             barrierDismissible: false,
-            confirm: noConfirmBtn());
+            confirm: noConfirmBtn()); */
+        return;
+      } else {
+        Get.defaultDialog(
+            title: "Commande validée",
+            middleText: "Votre commande a été envoyé avec succès",
+            barrierDismissible: false,
+            confirm: confirmBtn());
       }
     }
   }

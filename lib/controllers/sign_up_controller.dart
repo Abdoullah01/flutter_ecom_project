@@ -3,6 +3,9 @@ import 'package:ecom_project/routes.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../helper/shared_preference.dart';
 
 class RegisterationController extends GetxController {
   TextEditingController nameController = TextEditingController();
@@ -10,43 +13,64 @@ class RegisterationController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
 
-  Future<void> register() async {
-    const String BASE_URL = "http://192.168.1.18:8069/";
+  final String BASE_URL = "http://192.168.1.4:8069/";
+
+  Future<bool> getSession() async {
     try {
-      var headers = {'Content-Type': 'application/json'};
-      var url = Uri.parse("${BASE_URL}api/users");
-      final Map<String, dynamic> dataParams = <String, dynamic>{
-        'login': emailController.text.trim(),
-        'name': nameController.text,
-        'password': passwordController.text,
-       // 'confirm_password': passwordConfirmController.text
+      final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
+        "jsonrpc": "2.0",
+        "params": {"db": "mobile_app", "login": "admin", "password": "admin"}
       };
-      final Map<String, dynamic> data = <String, dynamic>{
-        "params": dataParams
+      var data = jsonEncode(dataJsonrpc);
+      var headers = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
       };
-
-      var response =
-          await http.post(url, body: jsonEncode(data), headers: headers);
-
+      var url = Uri.parse("${BASE_URL}web/session/authenticate");
+      var response = await http.post(url, headers: headers, body: data);
       if (response.statusCode == 200) {
-        final json = jsonDecode(response.body);
-        if (json['result']['status'] == 200) {
-          nameController.clear();
-          emailController.clear();
-          passwordController.clear();
-          Get.toNamed(GetRoutes.completeProfileScreen);
-          //Get.offAllNamed(GetRoutes.signIn);
-        } else {
-          throw jsonDecode(response.body)['result']['message'] ??
-              "Unknown Error Occured";
-        }
-      } else {
-        throw jsonDecode(response.body)['result']['message'] ??
-            "Unknown Error Occured";
+        var jsonResponse = jsonDecode(response.body);
+        print("jsonResponse $jsonResponse");
+        var sessionId = jsonResponse['result']['session_id'];
+        print("sessionId $sessionId");
+        await SharedPreference().setSessionIdToLogin(sessionId);
+        return true;
       }
-    } catch (e) {
-      Get.back();
+    } on Exception catch (e) {
+      // TODO
       print(e.toString());
+    }
+    return false;
+  }
+
+  Future<void> register() async {
+    //const String BASE_URL = "http://192.168.1.38:8069";
+    var currentSessionId = "";
+    var sessionReceved = await getSession();
+    print("sessionReceved : $sessionReceved");
+    if (sessionReceved == true) {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      currentSessionId = prefs.getString('session_id')!;
+      var headers = {
+        'Content-Type': 'application/json',
+        "X-Openerp-Session-Id": currentSessionId,
+      };
+      final Map<String, dynamic> dataParams = <String, dynamic>{
+        "params": {
+          "login": emailController.text.trim(),
+          'name': nameController.text,
+          "password": passwordController.text
+        }
+      };
+      var data = jsonEncode(dataParams);
+      var url = Uri.parse("${BASE_URL}api/create_users");
+      var response = await http.post(url, headers: headers, body: data);
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        print("jsonResponse signup: $jsonResponse");
+        String sessionId = jsonResponse['result']['session_id'];
+        await SharedPreference().setUserSessionIdToLogin(sessionId);
+        Get.offAllNamed(GetRoutes.home);
+      }
     }
   }
 }

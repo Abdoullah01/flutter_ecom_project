@@ -3,6 +3,7 @@ import 'package:ecom_project/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/shared_preference.dart';
 import '../routes.dart';
@@ -13,7 +14,7 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-   // checkSessionId();
+    // checkSessionId();
     emailController = TextEditingController();
     passwordController = TextEditingController();
   }
@@ -33,32 +34,56 @@ class LoginController extends GetxController {
     passwordController.dispose();
   }
 
-  final String BASE_URL = "http://192.168.1.18:8069/";
+  final String BASE_URL = "http://192.168.1.4:8069/";
   Future<void> login() async {
-    final Map<String, dynamic> dataParams = <String, dynamic>{
-      "db": "mobile_app",
-      "login": emailController.text,
-      "password": passwordController.text
-    };
-    final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
-      "jsonrpc": "2.0",
-      "params": dataParams
-    };
-    var data = jsonEncode(dataJsonrpc);
-    var headers = <String, String>{
-      'Content-Type': 'application/json; charset=UTF-8',
-    };
-    var url = Uri.parse("${BASE_URL}web/session/authenticate");
-    var response = await http.post(url, headers: headers, body: data);
-    if (response.statusCode == 200) {
-      var jsonResponse = jsonDecode(response.body);
-      if (jsonResponse.toString().contains("error")) {
+    try {
+      var userSessionId = "";
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      userSessionId = prefs.getString('session_id')!;
+      final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
+        "params": {
+          "login": emailController.text,
+          "password": passwordController.text
+        }
+      };
+      var data = jsonEncode(dataJsonrpc);
+      var headers = <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+        "X-Openerp-Session-Id": userSessionId,
+      };
+      var url = Uri.parse("${BASE_URL}api/login");
+      var response = await http.post(url, headers: headers, body: data);
+      if (response.statusCode == 200) {
+        var jsonResponse = jsonDecode(response.body);
+        var sessionId = jsonResponse['result']['session_id'];
+        await SharedPreference().setUserSessionIdToLogin(sessionId);
+
+        Get.offAllNamed(GetRoutes.home);
+        print("login sessionId $sessionId");
+      }
+    } on Exception catch (e) {
+      // TODO
+      print(e.toString());
+    }
+  }
+
+/* 
+  Widget confirmBtn() {
+    return ElevatedButton(
+        onPressed: () {
+          Get.back();
+        },
+        style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
+        child: const Text("OK"));
+  } */
+}
+      /* if (jsonResponse.toString().contains("error")) {
         Get.defaultDialog(
             title: "Erreur de connexion",
             middleText: "Vérifiez votre login et mot de passe",
             barrierDismissible: false,
             confirm: confirmBtn());
-            Get.back();
+        Get.back();
       } else {
         String rawCookie = response.headers['set-cookie']!;
         int index = rawCookie.indexOf(';');
@@ -68,24 +93,4 @@ class LoginController extends GetxController {
         String sessionId = refreshToken.substring(idx + 1).trim();
         await SharedPreference().setSessionIdToLogin(sessionId);
         Get.offAllNamed(GetRoutes.home);
-      }
-      //var err = jsonResponse['error'];
-      //print("erreur   : $err");
-
-      //return true;
-    }
-    /* else {
-      Get.defaultDialog(
-          title: "Erreur de connexion",
-          middleText: "Vérifiez votre login et mot de passe"); */
-  }
-
-  Widget confirmBtn() {
-    return ElevatedButton(
-        onPressed: () {
-          Get.back();
-        },
-        style: ElevatedButton.styleFrom(backgroundColor: kPrimaryColor),
-        child: const Text("OK"));
-  }
-}
+      } */

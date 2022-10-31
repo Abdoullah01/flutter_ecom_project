@@ -7,6 +7,7 @@ import '../../../components/custom_surfix_icon.dart';
 import '../../../components/default_button.dart';
 import '../../../components/form_error.dart';
 import '../../../constants.dart';
+import '../../../controllers/sign_up_controller.dart';
 import '../../../helper/keyboard.dart';
 import '../../../size_config.dart';
 
@@ -25,6 +26,8 @@ class _SignFormState extends State<SignForm> {
   bool? remember = false;
   final List<String?> errors = [];
   final LoginController loginController = Get.find();
+  final RegisterationController registerationController =
+      Get.put(RegisterationController());
 
   void addError({String? error}) {
     if (!errors.contains(error)) {
@@ -86,6 +89,7 @@ class _SignFormState extends State<SignForm> {
                 // if all are valid then go to success screen
                 KeyboardUtil.hideKeyboard(context);
                 loginController.login();
+                //registerationController.getSession();
                 //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
               }
             },

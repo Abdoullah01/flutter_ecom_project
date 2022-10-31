@@ -3,21 +3,20 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../helper/shared_preference.dart';
-import '../models/Cart.dart';
 import '../models/Product.dart';
 
 class ProductService {
-  static var client = http.Client();
+  //static var client = http.Client();
   static Future<List<Product>?> getProducts() async {
-    var sessionId = "";
+    var userSessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    sessionId = prefs.getString('session_id')!;
-
-    var uri = Uri.parse("http://192.168.1.18:8069/api/get_all_product");
-    var response = await client.get(
+    userSessionId = prefs.getString('token')!;
+    print("userSessionId $userSessionId");
+    var uri = Uri.parse("http://192.168.1.4:8069/api/get_all_product");
+    var response = await http.get(
       uri,
       headers: <String, String>{
-        "X-Openerp-Session-Id": sessionId,
+        "X-Openerp-Session-Id": userSessionId,
       },
     );
     if (response.statusCode == 200) {
@@ -27,7 +26,7 @@ class ProductService {
     return null;
   }
 
-  static Future<String?> getProduct(int productId) async {
+  /* static Future<String?> getProduct(int productId) async {
     //var sessionId = "";
     var sessionId = SharedPreference().getSessionIdToLogin();
     var uri = Uri.parse("http://192.168.1.2:8069/api/get_product/$productId");
@@ -42,8 +41,8 @@ class ProductService {
       return json;
     }
     return null;
-  }
+  } */
 
 // ignore: non_constant_identifier_names
-  
+
 }
