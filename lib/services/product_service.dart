@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import '../helper/shared_preference.dart';
 import '../models/Product.dart';
+import '../models/category.dart';
 
 class ProductService {
   //static var client = http.Client();
@@ -22,6 +23,26 @@ class ProductService {
     if (response.statusCode == 200) {
       var json = response.body;
       return productFromJson(json);
+    }
+    return null;
+  }
+
+  static Future<List<Category>?> getCategory() async {
+    var userSessionId = "";
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    userSessionId = prefs.getString('token')!;
+    print("userSessionId $userSessionId");
+    var uri = Uri.parse("http://192.168.1.4:8069/api/get_all_category");
+    var response = await http.get(
+      uri,
+      headers: <String, String>{
+        "X-Openerp-Session-Id": userSessionId,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = response.body;
+      print(json);
+      return categoryFromJson(json);
     }
     return null;
   }

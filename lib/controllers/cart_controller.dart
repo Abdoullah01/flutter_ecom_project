@@ -69,7 +69,7 @@ class CartController extends GetxController {
           for (var element in cartItems)
             {
               "product_id": element.product.id,
-              "description_sale": element.product.descriptionSale,
+              "name": element.product.name,
               "quantity": element.qty,
             }
         ]

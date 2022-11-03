@@ -4,11 +4,11 @@
 
 import 'dart:convert';
 
-List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+/* List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
 
-String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson()))); */
 
-class Product {
+/* class Product {
     Product({
         required this.id,
         required this.name,
@@ -66,7 +66,168 @@ class ProductVariantIds {
         "image_variant_1920": List<dynamic>.from(imageVariant1920.map((x) => x)),
         "lst_price": List<dynamic>.from(lstPrice.map((x) => x)),
     };
+} */
+
+
+// To parse this JSON data, do
+//
+//     final product = productFromJson(jsonString);
+
+
+
+List<Product> productFromJson(String str) => List<Product>.from(json.decode(str).map((x) => Product.fromJson(x)));
+
+String productToJson(List<Product> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Product {
+    Product({
+        required this.id,
+        required this.name,
+        required this.listPrice,
+        this.descriptionSale,
+        required this.productVariantIds,
+        required this.attributeLineIds,
+        required this.publicCategIds,
+        required this.image1920,
+    });
+
+    int id;
+    String name;
+    double listPrice;
+    dynamic descriptionSale;
+    ProductVariantIds productVariantIds;
+    AttributeLineIds attributeLineIds;
+    PublicCategIds publicCategIds;
+    String image1920;
+
+    factory Product.fromJson(Map<String, dynamic> json) => Product(
+        id: json["id"],
+        name: json["name"],
+        listPrice: json["list_price"].toDouble(),
+        descriptionSale: json["description_sale"],
+        productVariantIds: ProductVariantIds.fromJson(json["product_variant_ids"]),
+        attributeLineIds: AttributeLineIds.fromJson(json["attribute_line_ids"]),
+        publicCategIds: PublicCategIds.fromJson(json["public_categ_ids"]),
+        image1920: json["image_1920"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "list_price": listPrice,
+        "description_sale": descriptionSale,
+        "product_variant_ids": productVariantIds.toJson(),
+        "attribute_line_ids": attributeLineIds.toJson(),
+        "public_categ_ids": publicCategIds.toJson(),
+        "image_1920": image1920,
+    };
 }
+
+class AttributeLineIds {
+    AttributeLineIds({
+        required this.attributeId,
+    });
+
+    List<String> attributeId;
+
+    factory AttributeLineIds.fromJson(Map<String, dynamic> json) => AttributeLineIds(
+        attributeId: List<String>.from(json["attribute_id"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "attribute_id": List<dynamic>.from(attributeId.map((x) => x)),
+    };
+}
+
+class ProductVariantIds {
+    ProductVariantIds({
+        required this.id,
+        required this.imageVariant1920,
+        required this.lstPrice,
+    });
+
+    List<int> id;
+    List<String> imageVariant1920;
+    List<double> lstPrice;
+
+    factory ProductVariantIds.fromJson(Map<String, dynamic> json) => ProductVariantIds(
+        id: List<int>.from(json["id"].map((x) => x)),
+        imageVariant1920: List<String>.from(json["image_variant_1920"].map((x) => x)),
+        lstPrice: List<double>.from(json["lst_price"].map((x) => x.toDouble())),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": List<dynamic>.from(id.map((x) => x)),
+        "image_variant_1920": List<dynamic>.from(imageVariant1920.map((x) => x)),
+        "lst_price": List<dynamic>.from(lstPrice.map((x) => x)),
+    };
+}
+
+class PublicCategIds {
+    PublicCategIds({
+        required this.id,
+        required this.name,
+        required this.parentId,
+        required this.childId,
+    });
+
+    dynamic id;
+    dynamic name;
+    List<String> parentId;
+    List<String> childId;
+
+    factory PublicCategIds.fromJson(Map<String, dynamic> json) => PublicCategIds(
+        id: json["id"],
+        name: json["name"],
+        parentId: List<String>.from(json["parent_id"].map((x) => x)),
+        childId: List<String>.from(json["child_id"].map((x) => x)),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "parent_id": List<dynamic>.from(parentId.map((x) => x)),
+        "child_id": List<dynamic>.from(childId.map((x) => x)),
+    };
+}
+
+List<Category> categoryFromJson(String str) => List<Category>.from(json.decode(str).map((x) => Category.fromJson(x)));
+
+String categoryToJson(List<Category> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+class Category {
+    Category({
+        required this.id,
+        required this.name,
+        required this.image1920,
+        required this.parentId,
+        required this.childId,
+    });
+
+    int id;
+    String name;
+    dynamic image1920;
+    List<String> parentId;
+    List<String> childId;
+
+      factory Category.fromJson(Map<String, dynamic> json) => Category(
+        id: json["id"],
+        name: json["name"],
+        image1920: json["image_1920"],
+        parentId: List<String>.from(json["parent_id"].map((x) => x)),
+        childId: List<String>.from(json["child_id"].map((x) => x)),
+    );
+
+     Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "image_1920": image1920,
+        "parent_id": List<dynamic>.from(parentId.map((x) => x)),
+        "child_id": List<dynamic>.from(childId.map((x) => x)),
+    };
+}
+
+
 
 
 

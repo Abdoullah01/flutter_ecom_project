@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-
 import '../constants.dart';
 import '../enums.dart';
 
@@ -51,23 +50,29 @@ class CustomBottomNavBar extends StatelessWidget {
                     Navigator.pushNamed(context, HomeScreen.routeName),
               ),
               IconButton(
-                icon: SvgPicture.asset("assets/icons/Heart Icon.svg"),
-                onPressed: () {},
+                icon: Icon(
+                  Icons.grid_view,
+                  color: MenuState.catalog == selectedMenu
+                      ? kPrimaryColor
+                      : inActiveIconColor,
+                ),
+                //SvgPicture.asset("assets/icons/Heart Icon.svg")
+                onPressed: () => Get.toNamed(GetRoutes.catalogScreen),
               ),
               IconButton(
                 icon: SvgPicture.asset("assets/icons/Chat bubble Icon.svg"),
                 onPressed: () {},
               ),
               IconButton(
-                icon: SvgPicture.asset(
-                  "assets/icons/User Icon.svg",
-                  color: MenuState.profile == selectedMenu
-                      ? kPrimaryColor
-                      : inActiveIconColor,
-                ),
-                onPressed: () => Get.toNamed(GetRoutes.profileScreen)
-                   // Navigator.pushNamed(context, ProfileScreen.routeName),
-              ),
+                  icon: SvgPicture.asset(
+                    "assets/icons/User Icon.svg",
+                    color: MenuState.profile == selectedMenu
+                        ? kPrimaryColor
+                        : inActiveIconColor,
+                  ),
+                  onPressed: () => Get.toNamed(GetRoutes.profileScreen)
+                  // Navigator.pushNamed(context, ProfileScreen.routeName),
+                  ),
             ],
           )),
     );
