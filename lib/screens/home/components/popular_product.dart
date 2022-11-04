@@ -25,7 +25,7 @@ class PopularProducts extends StatelessWidget {
             child: Row(
               children: [
                 ...List.generate(
-                  productController.productList.length,
+                  5,
                   (index) {
                     return ProductCard(
                         product: productController.productList[index]);

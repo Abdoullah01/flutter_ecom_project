@@ -55,6 +55,7 @@ class ProductCard extends StatelessWidget {
                 product.name,
                 style: const TextStyle(color: Colors.black),
                 maxLines: 2,
+                overflow: TextOverflow.ellipsis,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

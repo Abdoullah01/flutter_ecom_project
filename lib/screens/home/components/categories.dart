@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
+import '../../../routes.dart';
 import '../../../size_config.dart';
+import 'all_category.dart';
 
 class Categories extends StatelessWidget {
   Categories({super.key});
@@ -32,9 +34,8 @@ class Categories extends StatelessWidget {
             itemBuilder: (context, index) {
               return CategoryBox(
                 category: productController.categoryList[index],
-                press: () {
-                  print("ok");
-                },
+                press: () => Get.toNamed(GetRoutes.categoryScreen,
+                    arguments: CategoryArguments(category: productController.categoryList[index])),
               );
             },
           ),

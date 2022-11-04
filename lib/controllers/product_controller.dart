@@ -1,21 +1,20 @@
 import 'package:ecom_project/services/product_service.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 import '../models/Product.dart';
-import '../models/category.dart';
 
 class ProductController extends GetxController {
   var isLoading = true.obs;
-  //var isLoadingRefresh = true.obs;
+  var categoryIsLoading = true.obs;
   var productList = <Product>[].obs;
   var categoryList = <Category>[].obs;
+  var productByCategoryList = <Product>[].obs;
 
   @override
   void onInit() {
     fetchProducts();
     //refreshData();
-    categoryhData();
+    //productByCategoryData();
+    categoryData();
     super.onInit();
   }
 
@@ -38,11 +37,23 @@ class ProductController extends GetxController {
     }
   }
 
-  void categoryhData() async {
+  void categoryData() async {
     var products = await ProductService.getCategory();
-    print(products);
     if (products != null) {
       categoryList.value = products;
+    }
+  }
+
+  void productByCategoryData(int categoryId) async {
+    try {
+      categoryIsLoading(true);
+      var products = await ProductService.getProductByCategory(categoryId);
+      if (products != null) {
+        productByCategoryList.value = products;
+      }
+    } finally {
+      // TODO
+      categoryIsLoading(false);
     }
   }
 }

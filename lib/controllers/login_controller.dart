@@ -34,7 +34,8 @@ class LoginController extends GetxController {
     passwordController.dispose();
   }
 
-  final String BASE_URL = "http://192.168.1.4:8069/";
+  //final String BASE_URL = "http://192.168.1.4:8069/";
+  final String BASE_URL = "http://188.166.104.18:9011/";
   Future<void> login() async {
     try {
       var userSessionId = "";

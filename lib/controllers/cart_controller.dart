@@ -59,6 +59,7 @@ class CartController extends GetxController {
     numOfItems.value = 1;
   }
 
+  // ignore: non_constant_identifier_names
   create_order() async {
     var sessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -83,11 +84,11 @@ class CartController extends GetxController {
       "X-Openerp-Session-Id": sessionId,
     };
 
-    var uri = Uri.parse("http://192.168.1.4:8069/api/create_ordered");
+    var uri = Uri.parse("http://188.166.104.18:9011/api/create_ordered");
+    //var uri = Uri.parse("http://192.168.1.4:8069/api/create_ordered");
     var response = await http.post(uri, headers: headers, body: data);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      print("data jsonResponse :$jsonResponse");
       if (jsonResponse.toString().contains("error")) {
         /* Get.defaultDialog(
             title: "Commande validée",

@@ -2,6 +2,7 @@ import 'package:ecom_project/screens/cart/cart_screen.dart';
 import 'package:ecom_project/screens/complete_profile/complete_profile_screen.dart';
 import 'package:ecom_project/screens/details/details_screen.dart';
 import 'package:ecom_project/screens/forgot_password/forgot_password_screen.dart';
+import 'package:ecom_project/screens/home/components/all_category.dart';
 import 'package:ecom_project/screens/home/components/product_catalog.dart';
 import 'package:ecom_project/screens/home/home_screen.dart';
 import 'package:ecom_project/screens/login_success/login_success_screen.dart';
@@ -43,6 +44,7 @@ class GetRoutes {
   static const String cartScreen = "/cartScreen";
   static const String profileScreen = "/profileScreen";
   static const String catalogScreen = "/catalogScreen";
+  static const String categoryScreen = "/categoryScreen";
 
   static List<GetPage> routes = [
     GetPage(name: GetRoutes.home, page: () => const HomeScreen()),
@@ -62,6 +64,7 @@ class GetRoutes {
     GetPage(name: GetRoutes.detailsScreen, page: () => DetailsScreen()),
     GetPage(name: GetRoutes.cartScreen, page: () => CartScreen()),
     GetPage(name: GetRoutes.profileScreen, page: () => const ProfileScreen()),
-    GetPage(name: GetRoutes.catalogScreen, page: () => const CatalogScreen()),
+    GetPage(name: GetRoutes.catalogScreen, page: () => CatalogScreen()),
+    GetPage(name: GetRoutes.categoryScreen, page: () => CategoryScreen()),
   ];
 }
