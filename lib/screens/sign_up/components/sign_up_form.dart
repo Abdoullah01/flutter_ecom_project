@@ -152,7 +152,7 @@ class _SignUpFormState extends State<SignUpForm> {
       onChanged: (value) {
         if (value.isNotEmpty) {
           removeError(error: kPassNullError);
-        } else if (value.length >= 10) {
+        } else if (value.length >= 4) {
           removeError(error: kShortPassError);
         }
         name = value;
@@ -161,7 +161,7 @@ class _SignUpFormState extends State<SignUpForm> {
         if (value!.isEmpty) {
           addError(error: kPassNullError);
           return "";
-        } else if (value.length < 10) {
+        } else if (value.length < 4) {
           addError(error: kShortPassError);
           return "";
         }

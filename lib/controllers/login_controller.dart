@@ -38,11 +38,10 @@ class LoginController extends GetxController {
   final String BASE_URL = "http://188.166.104.18:9011/";
   Future<void> login() async {
     try {
-      var userSessionId = "";
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
-      userSessionId = prefs.getString('session_id')!;
       final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
+        "jsonrpc": "2.0",
         "params": {
+          "db": "mobile_app",
           "login": emailController.text,
           "password": passwordController.text
         }
@@ -50,15 +49,18 @@ class LoginController extends GetxController {
       var data = jsonEncode(dataJsonrpc);
       var headers = <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
-        "X-Openerp-Session-Id": userSessionId,
       };
-      var url = Uri.parse("${BASE_URL}api/login");
+      var url = Uri.parse("${BASE_URL}web/session/authenticate");
       var response = await http.post(url, headers: headers, body: data);
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
-        var sessionId = jsonResponse['result']['session_id'];
-        await SharedPreference().setUserSessionIdToLogin(sessionId);
-
+        String rawCookie = response.headers['set-cookie']!;
+        int index = rawCookie.indexOf(';');
+        String refreshToken =
+            (index == -1) ? rawCookie : rawCookie.substring(0, index);
+        int idx = refreshToken.indexOf("=");
+        String sessionId = refreshToken.substring(idx + 1).trim();
+        await SharedPreference().setSessionIdToLogin(sessionId);
         Get.offAllNamed(GetRoutes.home);
         print("login sessionId $sessionId");
       }

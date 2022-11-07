@@ -17,7 +17,7 @@ void main() async {
 _checkSessionId() async {
   //var s = SharedPreference().getSessionIdToLogin();
   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  final st = prefs.getString('token');
+  final st = prefs.getString('session_id');
   print("session id ========= $st");
   if (st != null) {
     Get.offAll(() => const HomeScreen());

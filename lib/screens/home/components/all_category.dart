@@ -5,8 +5,6 @@ import 'package:ecom_project/screens/home/components/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../services/product_service.dart';
-
 class CategoryScreen extends StatelessWidget {
   CategoryScreen({super.key});
   final ProductController productController = Get.put(ProductController());
@@ -23,7 +21,7 @@ class CategoryScreen extends StatelessWidget {
           categoryName,
           style: const TextStyle(color: Colors.black),
         ),
-        elevation: 2,
+        elevation: 1,
       ),
       body: Obx((() => Container(
           padding: const EdgeInsets.all(10),

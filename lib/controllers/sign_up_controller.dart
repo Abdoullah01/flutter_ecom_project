@@ -13,7 +13,7 @@ class RegisterationController extends GetxController {
   TextEditingController passwordController = TextEditingController();
   TextEditingController passwordConfirmController = TextEditingController();
 
-  final String BASE_URL = "http://192.168.1.4:8069/";
+  final String BASE_URL = "http://188.166.104.18:9011/";
 
   Future<bool> getSession() async {
     try {
@@ -30,7 +30,13 @@ class RegisterationController extends GetxController {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         print("jsonResponse $jsonResponse");
-        var sessionId = jsonResponse['result']['session_id'];
+        String rawCookie = response.headers['set-cookie']!;
+        int index = rawCookie.indexOf(';');
+        String refreshToken =
+            (index == -1) ? rawCookie : rawCookie.substring(0, index);
+        int idx = refreshToken.indexOf("=");
+        String sessionId = refreshToken.substring(idx + 1).trim();
+        await SharedPreference().setSessionIdToLogin(sessionId);
         print("sessionId $sessionId");
         await SharedPreference().setSessionIdToLogin(sessionId);
         return true;
@@ -67,9 +73,12 @@ class RegisterationController extends GetxController {
       if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         print("jsonResponse signup: $jsonResponse");
-        String sessionId = jsonResponse['result']['session_id'];
-        await SharedPreference().setUserSessionIdToLogin(sessionId);
-        Get.offAllNamed(GetRoutes.home);
+        var userId = jsonResponse["result"]["id"];
+        print("userId signup: $userId");
+/*         await SharedPreference().setSessionIdToLogin(sessionId);
+        print("sessionId signup: $sessionId");
+        await SharedPreference().setUserSessionIdToLogin(sessionId);  */
+        Get.offAllNamed(GetRoutes.signIn);
       }
     }
   }

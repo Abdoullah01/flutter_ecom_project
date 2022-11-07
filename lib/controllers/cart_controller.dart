@@ -63,7 +63,7 @@ class CartController extends GetxController {
   create_order() async {
     var sessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    sessionId = prefs.getString('token')!;
+    sessionId = prefs.getString('session_id')!;
     Map<String, dynamic> dataParams = <String, dynamic>{
       "params": {
         "order_data": [
@@ -78,7 +78,6 @@ class CartController extends GetxController {
     };
 
     var data = jsonEncode(dataParams);
-    print("data  :$data");
     var headers = <String, String>{
       'Content-Type': 'application/json; charset=UTF-8',
       "X-Openerp-Session-Id": sessionId,
@@ -102,6 +101,7 @@ class CartController extends GetxController {
             middleText: "Votre commande a été envoyé avec succès",
             barrierDismissible: false,
             confirm: confirmBtn());
+            cartItems = <CartItemListModel>[].obs;
       }
     }
   }
