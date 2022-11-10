@@ -41,12 +41,13 @@ class CartController extends GetxController {
 
     //totalQty.value = totalQty.value + numOfItems.value;
 
-    totalAmount.value = totalAmount.value +
-        (product.listPrice * numOfItems.value).toPrecision(2);
+    totalAmount.value =
+        totalAmount.value + (product.listPrice * numOfItems.value);
+    totalAmount.value.toStringAsFixed(2);
     numOfItems.value = 1;
 
-    Get.snackbar("Produit Ajouté", "Vous avez ${product.name} au panier",
-        snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 3));
+   /*  Get.snackbar("Produit Ajouté", "Vous avez ${product.name} au panier",
+        snackPosition: SnackPosition.TOP, duration: const Duration(seconds: 3)); */
   }
 
   void removeItemFromCart(CartItemListModel currentItem) {
@@ -94,14 +95,15 @@ class CartController extends GetxController {
             middleText: "Vous avez passez votre",
             barrierDismissible: false,
             confirm: noConfirmBtn()); */
-        return;
+        return false;
       } else {
-        Get.defaultDialog(
+        /* Get.defaultDialog(
             title: "Commande validée",
             middleText: "Votre commande a été envoyé avec succès",
             barrierDismissible: false,
             confirm: confirmBtn());
-            cartItems = <CartItemListModel>[].obs;
+            cartItems = <CartItemListModel>[].obs; */
+        return true;
       }
     }
   }

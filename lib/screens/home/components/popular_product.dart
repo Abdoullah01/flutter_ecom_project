@@ -1,3 +1,4 @@
+import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -17,7 +18,11 @@ class PopularProducts extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: getProportionateScreenWidth(20)),
-            child: SectionTitle(title: "Produits Populaires", press: () {}),
+            child: SectionTitle(
+                title: "Produits Populaires",
+                press: () {
+                  Get.toNamed(GetRoutes.productListScreen);
+                }),
           ),
           SizedBox(height: getProportionateScreenWidth(20)),
           SingleChildScrollView(

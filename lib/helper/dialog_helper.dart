@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import '../constants.dart';
 
 class DialogHelper {
   //show error dialog
@@ -58,4 +61,40 @@ class DialogHelper {
   static void hideLoading() {
     if (Get.isDialogOpen!) Get.back();
   }
+}
+
+var alertStyle = AlertStyle(
+  overlayColor: kPrimaryColor,
+  animationType: AnimationType.fromTop,
+  isCloseButton: false,
+  isOverlayTapDismiss: false,
+  descStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+  animationDuration: const Duration(milliseconds: 400),
+  alertBorder: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(50.0),
+    side: const BorderSide(
+      color: Colors.white,
+    ),
+  ),
+  titleStyle: const TextStyle(
+    color: kPrimaryColor,
+  ),
+);
+
+showCustomDialog(
+    BuildContext context, String title, desc, AlertType type, Widget child) {
+  Alert(
+    context: context,
+    style: alertStyle,
+    type: type,
+    title: title,
+    desc: desc,
+    buttons: [
+      DialogButton(
+          onPressed: () => Navigator.pop(context),
+          color: kPrimaryColor,
+          radius: BorderRadius.circular(10.0),
+          child: child),
+    ],
+  ).show();
 }

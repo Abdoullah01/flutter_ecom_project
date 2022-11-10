@@ -48,7 +48,7 @@ class RegisterationController extends GetxController {
     return false;
   }
 
-  Future<void> register() async {
+  Future<String?> register() async {
     //const String BASE_URL = "http://192.168.1.38:8069";
     var currentSessionId = "";
     var sessionReceved = await getSession();
@@ -69,17 +69,15 @@ class RegisterationController extends GetxController {
       };
       var data = jsonEncode(dataParams);
       var url = Uri.parse("${BASE_URL}api/create_users");
-      var response = await http.post(url, headers: headers, body: data);
-      if (response.statusCode == 200) {
-        var jsonResponse = jsonDecode(response.body);
-        print("jsonResponse signup: $jsonResponse");
-        var userId = jsonResponse["result"]["id"];
-        print("userId signup: $userId");
+      http.Response response =
+          await http.post(url, headers: headers, body: data);
+      return response.body;
+
 /*         await SharedPreference().setSessionIdToLogin(sessionId);
         print("sessionId signup: $sessionId");
         await SharedPreference().setUserSessionIdToLogin(sessionId);  */
-        Get.offAllNamed(GetRoutes.signIn);
-      }
+
     }
+    return null;
   }
 }

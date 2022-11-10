@@ -1,5 +1,7 @@
+import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../../components/default_button.dart';
 import '../../../controllers/cart_controller.dart';
@@ -46,6 +48,36 @@ class Body extends StatelessWidget {
                           text: "Ajouter au panier",
                           press: () {
                             controller.addItemInCart(product);
+                            Alert(
+                              context: context,
+                              type: AlertType.warning,
+                              title: "Produit Ajouté",
+                              desc: "Votre produit a été ajouté au panier.",
+                              buttons: [
+                                DialogButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  color: const Color.fromRGBO(0, 179, 134, 1.0),
+                                  child: const Text(
+                                    "RETOUR",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                ),
+                                DialogButton(
+                                  onPressed: () =>
+                                      Get.toNamed(GetRoutes.cartScreen),
+                                  gradient: const LinearGradient(colors: [
+                                    Color.fromRGBO(116, 116, 191, 1.0),
+                                    Color.fromRGBO(52, 138, 199, 1.0),
+                                  ]),
+                                  child: const Text(
+                                    "ALLER AU PANIER",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 14),
+                                  ),
+                                )
+                              ],
+                            ).show();
                           },
                         ),
                       ),

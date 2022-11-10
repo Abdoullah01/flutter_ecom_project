@@ -1,12 +1,13 @@
-import 'package:ecom_project/routes.dart';
+import 'package:ecom_project/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../helper/shared_preference.dart';
 import 'profile_menu.dart';
 import 'profile_pic.dart';
 
 class Body extends StatelessWidget {
+  Body({super.key});
+  bool isLoding = false;
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -16,7 +17,7 @@ class Body extends StatelessWidget {
           const ProfilePic(),
           const SizedBox(height: 20),
           ProfileMenu(
-            text: "My Account",
+            text: "Mon Compte",
             icon: "assets/icons/User Icon.svg",
             press: () => {},
           ),
@@ -35,14 +36,18 @@ class Body extends StatelessWidget {
             icon: "assets/icons/Question mark.svg",
             press: () {},
           ),
-          ProfileMenu(
-            text: "Déconnexion",
-            icon: "assets/icons/Log out.svg",
-            press: () async {
-              await SharedPreference().removeSessionIdToLogin();
-              Get.toNamed(GetRoutes.signIn);
-            },
-          ),
+          !isLoding
+              ? ProfileMenu(
+                  text: "Déconnexion",
+                  icon: "assets/icons/Log out.svg",
+                  press: () async {
+                    await SharedPreference().removeSessionIdToLogin();
+                    isLoding = true;
+                  },
+                )
+              : const Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
         ],
       ),
     );

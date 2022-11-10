@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -23,6 +25,7 @@ class _SignUpFormState extends State<SignUpForm> {
   String? email;
   String? name;
   String? password;
+  bool isLoading = false;
   // ignore: non_constant_identifier_names
   String? conform_password;
   bool remember = false;
@@ -60,18 +63,30 @@ class _SignUpFormState extends State<SignUpForm> {
           buildConformPassFormField(),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(40)),
-          DefaultButton(
-            text: "Continue",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                //Navigator.pushNamed(context, CompleteProfileScreen.routeName);
-                registerationController.register();
-               // Get.toNamed(GetRoutes.completeProfileScreen);
-              }
-            },
-          ),
+          !isLoading
+              ? DefaultButton(
+                  text: "Continue",
+                  press: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      // if all are valid then go to success screen
+                      //Navigator.pushNamed(context, CompleteProfileScreen.routeName);
+                      var res = await registerationController.register();
+                      if (res!.contains("error")) {
+                        addError(
+                            error: jsonDecode(res)['error']['data']['message']);
+                      } else {
+                        Get.toNamed(GetRoutes.signIn);
+                        setState(() => isLoading = true);
+                      }
+
+                      // Get.toNamed(GetRoutes.completeProfileScreen);
+                    }
+                  },
+                )
+              : const Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor),
+                ),
         ],
       ),
     );
@@ -101,8 +116,8 @@ class _SignUpFormState extends State<SignUpForm> {
         return null;
       },
       decoration: const InputDecoration(
-        labelText: "Confirm Password",
-        hintText: "Re-enter your password",
+        labelText: "Confirmer mot de passe",
+        hintText: "Confirmer votre Mot de passe",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -135,8 +150,8 @@ class _SignUpFormState extends State<SignUpForm> {
         return null;
       },
       decoration: const InputDecoration(
-        labelText: "Password",
-        hintText: "Enter your password",
+        labelText: "Mot de passe",
+        hintText: "Entrez votre mot de passe",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -169,7 +184,7 @@ class _SignUpFormState extends State<SignUpForm> {
       },
       decoration: const InputDecoration(
         labelText: "Nom",
-        hintText: "Enter your name",
+        hintText: "Entrez votre nom",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -203,7 +218,7 @@ class _SignUpFormState extends State<SignUpForm> {
       },
       decoration: const InputDecoration(
         labelText: "Email",
-        hintText: "Enter your email",
+        hintText: "Entrez votre Email",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,

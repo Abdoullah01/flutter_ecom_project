@@ -1,46 +1,51 @@
 import 'dart:convert';
 
-import 'package:ecom_project/controllers/product_controller.dart';
-import 'package:ecom_project/models/Product.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../../controllers/product_controller.dart';
+import '../../../models/Product.dart';
 import '../../../routes.dart';
 import '../../../size_config.dart';
+import 'all_category.dart';
+import 'category_product_widget.dart';
 
-class Categories extends StatelessWidget {
-  Categories({super.key});
+class CategoryListScreen extends StatelessWidget {
+  CategoryListScreen({super.key});
+
   final ProductController productController = Get.put(ProductController());
+
+  AppBar buildAppBar() {
+    return AppBar(
+      title: const Text(
+        "Categories Articles",
+        style: TextStyle(color: Colors.black),
+      ),
+      centerTitle: true,
+      elevation: 1,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    /*  List<Map<String, dynamic>> categories = [
-      {"icon": "assets/icons/homme.svg", "text": "Homme"},
-      {"icon": "assets/icons/femme.svg", "text": "Femme"},
-      {"icon": "assets/icons/enfant.svg", "text": "Enfant"},
-      {"icon": "assets/icons/sport.svg", "text": "Sport"},
-      {"icon": "assets/icons/Discover.svg", "text": "Plus"},
-    ]; */
-
-    return Padding(
-        padding: EdgeInsets.all(getProportionateScreenWidth(20)),
-        child: SizedBox(
-          height: 100,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            shrinkWrap: true,
-            itemCount: productController.categoryList.length,
-            itemBuilder: (context, index) {
-              return CategoryBox(
-                category: productController.categoryList[index],
-                press: () => Get.toNamed(GetRoutes.categoryScreen, arguments: {
-                  "id": productController.categoryList[index].id,
-                  "name": productController.categoryList[index].name
-                }),
-              );
-            },
-          ),
-        ));
+    return Scaffold(
+        appBar: buildAppBar(),
+        body: Padding(
+            padding: EdgeInsets.all(getProportionateScreenWidth(20)),
+            child: SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemCount: productController.categoryList.length,
+                itemBuilder: (context, index) {
+                  return CategoryBox(
+                      category: productController.categoryList[index],
+                      press: () {});
+                },
+              ),
+            )));
   }
 }
 
@@ -90,30 +95,14 @@ class CategoryBox extends StatelessWidget {
   }
 }
 
-/*  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(
-          productController.categoryList.length,
-          (index) => CategoryCard(
-            icon: "assets/icons/femme.svg",
-            text: productController.categoryList[index].name,
-            press: () {
-              print("ok");
-              print(productController.categoryList.length);
-            },
-          ),
-        ),
-      ), */
-
 class CategoryCard extends StatelessWidget {
   const CategoryCard({
     Key? key,
-    required this.icon,
-    required this.text,
     required this.press,
+    required this.category,
   }) : super(key: key);
 
-  final String? icon, text;
+  final Category category;
   final GestureTapCallback press;
 
   @override
@@ -132,10 +121,13 @@ class CategoryCard extends StatelessWidget {
                 color: const Color(0xFFFFECDF),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: SvgPicture.asset(icon!),
+              child: category.image1920 != false
+                  ? Image.memory(const Base64Decoder()
+                      .convert(category.image1920.split(',').last))
+                  : const Icon(Icons.category),
             ),
             const SizedBox(height: 5),
-            Text(text!, textAlign: TextAlign.center)
+            Text(category.name, textAlign: TextAlign.center)
           ],
         ),
       ),

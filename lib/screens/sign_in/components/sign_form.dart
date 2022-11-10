@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:ecom_project/controllers/login_controller.dart';
 import 'package:ecom_project/routes.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ import '../../../components/form_error.dart';
 import '../../../constants.dart';
 import '../../../controllers/sign_up_controller.dart';
 import '../../../helper/keyboard.dart';
+import '../../../helper/shared_preference.dart';
 import '../../../size_config.dart';
 
 class SignForm extends StatefulWidget {
@@ -24,6 +27,7 @@ class _SignFormState extends State<SignForm> {
   String? email;
   String? password;
   bool? remember = false;
+  bool isLoading = false;
   final List<String?> errors = [];
   final LoginController loginController = Get.find();
   final RegisterationController registerationController =
@@ -73,7 +77,7 @@ class _SignFormState extends State<SignForm> {
                 // Navigator.pushNamed(
                 //    context, ForgotPasswordScreen.routeName),
                 child: const Text(
-                  "Forgot Password",
+                  "Mot de passe oublié",
                   style: TextStyle(decoration: TextDecoration.underline),
                 ),
               )
@@ -81,19 +85,42 @@ class _SignFormState extends State<SignForm> {
           ),
           FormError(errors: errors),
           SizedBox(height: getProportionateScreenHeight(20)),
-          DefaultButton(
-            text: "Continue",
-            press: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                // if all are valid then go to success screen
-                KeyboardUtil.hideKeyboard(context);
-                loginController.login();
-                //registerationController.getSession();
-                //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
-              }
-            },
-          ),
+          !isLoading
+              ? DefaultButton(
+                  text: "Continue",
+                  press: () async {
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      // if all are valid then go to success screen
+                      KeyboardUtil.hideKeyboard(context);
+                      var res = await loginController.login();
+                      if (res.body.contains("error")) {
+                        addError(
+                            error:
+                                "Vérifiez votre mot de passe ou votre email");
+                      } else {
+                        String rawCookie = res.headers['set-cookie']!;
+                        int index = rawCookie.indexOf(';');
+                        String refreshToken = (index == -1)
+                            ? rawCookie
+                            : rawCookie.substring(0, index);
+                        int idx = refreshToken.indexOf("=");
+                        String sessionId =
+                            refreshToken.substring(idx + 1).trim();
+                        await SharedPreference().setSessionIdToLogin(sessionId);
+                        Get.offAllNamed(GetRoutes.home);
+                      }
+                      setState(() {
+                        isLoading = true;
+                      });
+                      //registerationController.getSession();
+                      //Navigator.pushNamed(context, LoginSuccessScreen.routeName);
+                    }
+                  },
+                )
+              : const Center(
+                  child: CircularProgressIndicator(color: kPrimaryColor,),
+                ),
         ],
       ),
     );
@@ -123,8 +150,8 @@ class _SignFormState extends State<SignForm> {
         return null;
       },
       decoration: const InputDecoration(
-        labelText: "Password",
-        hintText: "Enter your password",
+        labelText: "Mot de passe",
+        hintText: "Entrez votre mot de passe",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -158,7 +185,7 @@ class _SignFormState extends State<SignForm> {
       },
       decoration: const InputDecoration(
         labelText: "Email",
-        hintText: "Enter your email",
+        hintText: "Entrez votre email",
         // If  you are using latest version of flutter then lable text and hint text shown like this
         // if you r using flutter less then 1.20.* then maybe this is not working properly
         floatingLabelBehavior: FloatingLabelBehavior.always,

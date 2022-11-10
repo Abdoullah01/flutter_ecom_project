@@ -24,13 +24,18 @@ class FormError extends StatelessWidget {
       children: [
         SvgPicture.asset(
           "assets/icons/Error.svg",
-          height: getProportionateScreenWidth(14),
-          width: getProportionateScreenWidth(14),
+          height: getProportionateScreenWidth(12),
+          width: getProportionateScreenWidth(12),
         ),
         SizedBox(
           width: getProportionateScreenWidth(10),
         ),
-        Text(error),
+        error.length >= 50
+            ? Text(
+                error,
+                style: const TextStyle(fontSize: 11),
+              )
+            : Text(error),
       ],
     );
   }

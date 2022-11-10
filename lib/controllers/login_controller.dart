@@ -36,23 +36,23 @@ class LoginController extends GetxController {
 
   //final String BASE_URL = "http://192.168.1.4:8069/";
   final String BASE_URL = "http://188.166.104.18:9011/";
-  Future<void> login() async {
-    try {
-      final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
-        "jsonrpc": "2.0",
-        "params": {
-          "db": "mobile_app",
-          "login": emailController.text,
-          "password": passwordController.text
-        }
-      };
-      var data = jsonEncode(dataJsonrpc);
-      var headers = <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      };
-      var url = Uri.parse("${BASE_URL}web/session/authenticate");
-      var response = await http.post(url, headers: headers, body: data);
-      if (response.statusCode == 200) {
+  Future<http.Response> login() async {
+    final Map<String, dynamic> dataJsonrpc = <String, dynamic>{
+      "jsonrpc": "2.0",
+      "params": {
+        "db": "mobile_app",
+        "login": emailController.text,
+        "password": passwordController.text
+      }
+    };
+    var data = jsonEncode(dataJsonrpc);
+    var headers = <String, String>{
+      'Content-Type': 'application/json; charset=UTF-8',
+    };
+    var url = Uri.parse("${BASE_URL}web/session/authenticate");
+    var response = await http.post(url, headers: headers, body: data);
+    return response;
+    /* if (response.statusCode == 200) {
         var jsonResponse = jsonDecode(response.body);
         String rawCookie = response.headers['set-cookie']!;
         int index = rawCookie.indexOf(';');
@@ -63,11 +63,7 @@ class LoginController extends GetxController {
         await SharedPreference().setSessionIdToLogin(sessionId);
         Get.offAllNamed(GetRoutes.home);
         print("login sessionId $sessionId");
-      }
-    } on Exception catch (e) {
-      // TODO
-      print(e.toString());
-    }
+      } */
   }
 
 /* 

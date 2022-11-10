@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -10,8 +9,9 @@ import 'app_exception.dart';
 class ProductService {
   //static var client = http.Client();
   static Future<List<Product>?> getProducts() async {
-    var userSessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    var userSessionId = "";
     userSessionId = prefs.getString('session_id')!;
     //var uri = Uri.parse("http://192.168.1.4:8069/api/get_all_product");
     var uri = Uri.parse("http://188.166.104.18:9011/api/get_all_product");
@@ -23,8 +23,8 @@ class ProductService {
         },
       );
       if (response.statusCode == 200) {
-        var json = response.body;
-        return productFromJson(json);
+        await prefs.setString("products", response.body);
+        return productFromJson(response.body);
       }
       return null;
     } on SocketException {
@@ -39,7 +39,6 @@ class ProductService {
     var userSessionId = "";
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     userSessionId = prefs.getString('session_id')!;
-    print("userSessionId $userSessionId");
     //var uri = Uri.parse("http://192.168.1.4:8069/api/get_all_category");
     var uri = Uri.parse("http://188.166.104.18:9011/api/get_all_category");
     try {
@@ -50,9 +49,8 @@ class ProductService {
         },
       );
       if (response.statusCode == 200) {
-        var json = response.body;
-
-        return categoryFromJson(json);
+        await prefs.setString("categories", response.body);
+        return categoryFromJson(response.body);
       }
     } on Exception catch (e) {
       // TODO
@@ -74,8 +72,8 @@ class ProductService {
     try {
       var response = await http.get(uri, headers: headers);
       if (response.statusCode == 200) {
-        var json = response.body;
-        return productFromJson(json);
+        await prefs.setString("products_category", response.body);
+        return productFromJson(response.body);
       }
     } on Exception catch (e) {
       print(e.toString());

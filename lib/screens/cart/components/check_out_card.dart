@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 import '../../../components/default_button.dart';
 import '../../../constants.dart';
 import '../../../controllers/cart_controller.dart';
+import '../../../helper/dialog_helper.dart';
 import '../../../models/Cart.dart';
 import '../../../services/product_service.dart';
 import '../../../size_config.dart';
@@ -86,7 +88,30 @@ class CheckoutCard extends StatelessWidget {
                   child: DefaultButton(
                     text: "Commander",
                     press: () async {
-                      await cartController.create_order();
+                      var r = await cartController.create_order();
+                      if (r == true) {
+                        // ignore: use_build_context_synchronously
+                        showCustomDialog(
+                            context,
+                            "Commande Validée",
+                            "Votre commande a été enregisté",
+                            AlertType.success,
+                            const Text(
+                              "OK",
+                              style: TextStyle(color: Colors.white),
+                            ));
+                      } else {
+                        // ignore: use_build_context_synchronously
+                        showCustomDialog(
+                            context,
+                            "ERREUR",
+                            "Commande non enregistée",
+                            AlertType.error,
+                            const Text(
+                              "OK",
+                              style: TextStyle(color: Colors.white),
+                            ));
+                      }
                     },
                   ),
                 ),

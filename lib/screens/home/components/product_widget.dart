@@ -3,8 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../constants.dart';
 import '../../../models/Product.dart';
 import '../../../routes.dart';
+import '../../../size_config.dart';
 import '../../details/details_screen.dart';
 
 class ProductWidget extends StatelessWidget {
@@ -16,7 +18,6 @@ class ProductWidget extends StatelessWidget {
       onTap: () => Get.toNamed(GetRoutes.detailsScreen,
           arguments: ProductDetailsArguments(product: product)),
       child: Container(
-        margin: const EdgeInsets.all(10.0),
         decoration: BoxDecoration(
             color: Colors.transparent, borderRadius: BorderRadius.circular(5)),
         child: Column(
@@ -28,8 +29,8 @@ class ProductWidget extends StatelessWidget {
               width: double.infinity,
               alignment: Alignment.topRight,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                color: kSecondaryColor.withOpacity(0.0),
+                borderRadius: BorderRadius.circular(5),
                 image: DecorationImage(
                     image: MemoryImage(const Base64Decoder()
                         .convert(product.image1920.split(',').last))),
@@ -51,7 +52,11 @@ class ProductWidget extends StatelessWidget {
                     children: [
                       Text(
                         "${product.listPrice} FCFA",
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: kPrimaryColor,
+                        ),
                       )
                     ],
                   )
